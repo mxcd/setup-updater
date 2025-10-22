@@ -1,9 +1,9 @@
 # Dependencies
 node_modules/
 
-# Build artifacts
-dist/
+# Build artifacts (keep dist/ for GitHub Actions)
 build/
+licenses.txt
 
 # Test coverage
 coverage/
@@ -30,3 +30,7 @@ yarn-error.log*
 tmp/
 temp/
 *.tmp
+
+# Lock files (keep package-lock.json)
+# yarn.lock
+# pnpm-lock.yaml
