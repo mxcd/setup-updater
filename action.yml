@@ -1,0 +1,20 @@
+name: 'Setup Updater'
+description: 'Install the mxcd/updater binary as GitHub Action CI Pipeline tool'
+author: 'mxcd'
+branding:
+  icon: 'download'
+  color: 'blue'
+
+inputs:
+  version:
+    description: 'Version of mxcd/updater to install'
+    required: false
+    default: 'v0.2.1'
+
+outputs:
+  version:
+    description: 'The installed version of updater'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

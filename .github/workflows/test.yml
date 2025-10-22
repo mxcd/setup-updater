@@ -1,0 +1,72 @@
+name: Test Action
+
+on:
+  push:
+    branches:
+      - main
+      - copilot/**
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-ubuntu:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test setup-updater with default version
+        uses: ./
+        id: setup-default
+
+      - name: Verify updater is in PATH
+        run: |
+          which updater
+          updater --help || updater -h || echo "Help command not available"
+
+      - name: Check output
+        run: |
+          echo "Installed version: ${{ steps.setup-default.outputs.version }}"
+
+  test-ubuntu-custom-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test setup-updater with custom version
+        uses: ./
+        with:
+          version: 'v0.2.1'
+        id: setup-custom
+
+      - name: Verify updater is in PATH
+        run: |
+          which updater
+          updater --help || updater -h || echo "Help command not available"
+
+      - name: Check output
+        run: |
+          echo "Installed version: ${{ steps.setup-custom.outputs.version }}"
+
+  test-macos:
+    runs-on: macos-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test setup-updater on macOS
+        uses: ./
+
+      - name: Verify updater is in PATH
+        run: |
+          which updater
+          updater --help || updater -h || echo "Help command not available"
