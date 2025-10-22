@@ -1,0 +1,118 @@
+name: 'Setup Updater'
+description: 'Install the mxcd/updater binary as GitHub Action CI Pipeline tool'
+author: 'mxcd'
+branding:
+  icon: 'download'
+  color: 'blue'
+
+inputs:
+  version:
+    description: 'Version of mxcd/updater to install'
+    required: false
+    default: 'v0.2.1'
+
+outputs:
+  version:
+    description: 'The installed version of updater'
+    value: ${{ steps.install.outputs.version }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install updater
+      id: install
+      shell: bash
+      run: |
+        # Determine OS and architecture
+        OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+        ARCH=$(uname -m)
+
+        # Normalize architecture names
+        case "$ARCH" in
+          x86_64)
+            ARCH="amd64"
+            ;;
+          aarch64|arm64)
+            ARCH="arm64"
+            ;;
+          armv7l)
+            ARCH="arm"
+            ;;
+          i386|i686)
+            ARCH="386"
+            ;;
+        esac
+
+        # Normalize OS names
+        case "$OS" in
+          darwin)
+            OS="darwin"
+            ;;
+          linux)
+            OS="linux"
+            ;;
+          mingw*|msys*|cygwin*)
+            OS="windows"
+            ;;
+        esac
+
+        VERSION="${{ inputs.version }}"
+        echo "Installing updater $VERSION for $OS/$ARCH"
+
+        # Construct download URL
+        # Format: https://github.com/mxcd/updater/releases/download/
+        # {version}/updater-{os}-{arch}
+        BINARY_NAME="updater"
+        if [ "$OS" = "windows" ]; then
+          BINARY_NAME="updater.exe"
+        fi
+
+        BASE_URL="https://github.com/mxcd/updater/releases/download"
+        DOWNLOAD_URL="${BASE_URL}/${VERSION}/updater-${OS}-${ARCH}"
+        if [ "$OS" = "windows" ]; then
+          DOWNLOAD_URL="${DOWNLOAD_URL}.exe"
+        fi
+
+        echo "Downloading from: $DOWNLOAD_URL"
+
+        # Create a temporary directory for download
+        TEMP_DIR=$(mktemp -d)
+        DOWNLOAD_PATH="$TEMP_DIR/$BINARY_NAME"
+
+        # Download the binary
+        if ! curl -sSfL "$DOWNLOAD_URL" -o "$DOWNLOAD_PATH"; then
+          echo "Error: Failed to download updater from $DOWNLOAD_URL"
+          exit 1
+        fi
+
+        # Make it executable (not needed for Windows)
+        if [ "$OS" != "windows" ]; then
+          chmod +x "$DOWNLOAD_PATH"
+        fi
+
+        # Create installation directory
+        INSTALL_DIR="$HOME/.local/bin"
+        mkdir -p "$INSTALL_DIR"
+
+        # Move binary to installation directory
+        mv "$DOWNLOAD_PATH" "$INSTALL_DIR/$BINARY_NAME"
+
+        # Add to PATH
+        echo "$INSTALL_DIR" >> $GITHUB_PATH
+
+        # Clean up
+        rm -rf "$TEMP_DIR"
+
+        # Verify installation
+        echo "Verifying installation..."
+        export PATH="$INSTALL_DIR:$PATH"
+        if command -v updater &> /dev/null; then
+          INSTALLED_VERSION=$(updater version 2>&1 \
+            || updater --version 2>&1 || echo "$VERSION")
+          echo "Successfully installed updater"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        else
+          echo "Warning: updater binary installed but not" \
+               "immediately available in PATH"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        fi
