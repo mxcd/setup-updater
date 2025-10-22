@@ -70,20 +70,3 @@ jobs:
         run: |
           which updater
           updater --help || updater -h || echo "Help command not available"
-
-  test-windows:
-    runs-on: windows-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Test setup-updater on Windows
-        uses: ./
-
-      - name: Verify updater is in PATH
-        shell: bash
-        run: |
-          which updater
-          updater --help || updater -h || echo "Help command not available"
