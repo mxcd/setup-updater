@@ -60,6 +60,12 @@ This action supports the following platforms:
 - macOS (amd64, arm64)
 - Windows (amd64, arm64, 386)
 
+## Features
+
+- **Tool Caching**: Downloaded binaries are cached using GitHub Actions tool cache for faster subsequent runs
+- **Cross-Platform**: Works seamlessly across Linux, macOS, and Windows runners
+- **Multiple Architectures**: Supports amd64, arm64, arm, and 386 architectures
+
 ## License
 
 MIT
