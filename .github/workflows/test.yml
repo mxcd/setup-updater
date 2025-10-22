@@ -43,7 +43,7 @@ jobs:
       - name: Test setup-updater with custom version
         uses: ./
         with:
-          version: 'v0.2.1'
+          version: "v0.2.2"
         id: setup-custom
 
       - name: Verify updater is in PATH
