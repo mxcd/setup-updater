@@ -30118,7 +30118,7 @@ const fs = __nccwpck_require__(9896);
 async function run() {
   try {
     // Get inputs
-    const version = core.getInput('version') || 'v0.2.3';
+    const version = core.getInput('version') || 'v0.3.0';
     
     core.info(`Setting up updater ${version}`);
     
