@@ -9,7 +9,7 @@ inputs:
   version:
     description: 'Version of mxcd/updater to install'
     required: false
-    default: 'v0.4.1'
+    default: 'v0.4.2'
 
 outputs:
   version:

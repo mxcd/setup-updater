@@ -10,14 +10,14 @@ A GitHub Action to install the [mxcd/updater](https://github.com/mxcd/updater) b
 - uses: mxcd/setup-updater@v1
 ```
 
-This will install the default version (v0.4.1) of the updater binary.
+This will install the default version (v0.4.2) of the updater binary.
 
 ### Specify Version
 
 ```yaml
 - uses: mxcd/setup-updater@v1
   with:
-    version: 'v0.4.1'
+    version: 'v0.4.2'
 ```
 
 ### Complete Workflow Example
@@ -35,7 +35,7 @@ jobs:
       - name: Setup Updater
         uses: mxcd/setup-updater@v1
         with:
-          version: 'v0.4.1'
+          version: 'v0.4.2'
       
       - name: Run Updater
         run: updater version
@@ -45,7 +45,7 @@ jobs:
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
-| `version` | Version of mxcd/updater to install | No | `v0.4.1` |
+| `version` | Version of mxcd/updater to install | No | `v0.4.2` |
 
 ## Outputs
 
