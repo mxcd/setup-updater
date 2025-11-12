@@ -8,7 +8,7 @@ const fs = require('fs');
 async function run() {
   try {
     // Get inputs
-    const version = core.getInput('version') || 'v0.4.5';
+    const version = core.getInput('version') || 'v0.5.0';
     
     core.info(`Setting up updater ${version}`);
     
